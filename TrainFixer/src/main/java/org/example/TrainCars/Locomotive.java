@@ -1,6 +1,6 @@
-package org.example.Carts;
+package org.example.TrainCars;
 
-public class Locomotive {
+public class Locomotive extends TrainCar {
 
     public String name;
     public Locomotive(String name) {
