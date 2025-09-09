@@ -48,5 +48,70 @@ public class MyLinkedList<T> implements MyList<T> {
         return true;
     }
 
+    @Override
+    public T get(int index) {
+        Node<T> node = head;
+        for(int i = 0; i < index; i++){
+            node = node.next;
+
+            if(node.data.equals(head.data)){
+                return node.data;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public T set(int index, T element) {
+        Node<T> node = head;
+        for(int i = 0; i < index; i++){
+            node = node.next;
+            if(node.data.equals(element)){
+                node.next = node.next.next;
+            }
+            else{
+                node.next = node.next.next;
+            }
+        }
+        return node.data;
+    }
+
+    @Override
+    public boolean contains(Object o) {
+        Node<T> node = head;
+        while(node.next != null){
+            if(node.next.data.equals(o)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public int size() {
+        return size;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        if(head == null){
+            return true;
+        }
+        return false;
+    }
+
+
+    //NB! Korrekt implementation?
+    @Override
+    public MyList<T> subList(int fromIndex, int toIndex) {
+        MyList<T> sublist = new MyLinkedList<T>();
+        for(int i = fromIndex; i < toIndex; i++){
+            sublist.add(get(i));
+        }
+        return sublist;
+    }
+
+
+
 
 }
