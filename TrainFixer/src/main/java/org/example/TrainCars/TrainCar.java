@@ -3,7 +3,7 @@ package org.example.TrainCars;
 /**
  * Generic train car class. Each instantiation functions as a node in the linked list.
  */
-abstract class TrainCar{
+public class TrainCar{
 
     protected int trainCarId;
     protected String trainCarType;

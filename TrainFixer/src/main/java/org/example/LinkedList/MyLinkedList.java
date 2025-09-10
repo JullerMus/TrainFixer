@@ -5,11 +5,11 @@ public class MyLinkedList<T> implements MyList<T> {
     private Node<T> head;
     private int size;
 
-    private static class Node<T>{
+    private static class Node<T> {
         T data;
         Node<T> next;
 
-        Node(T data){
+        Node(T data) {
             this.data = data;
             this.next = null;
         }
@@ -22,12 +22,17 @@ public class MyLinkedList<T> implements MyList<T> {
 
     @Override
     public boolean add(T data) {
+
         Node<T> newNode = new Node<>(data);
-        if(head == null){
+
+        if (head == null) {
             head = newNode;
-        }
-        else{
-            newNode.next = head;
+        } else {
+            Node<T> current = head;
+            while (current.next != null) {
+                current = current.next;
+            }
+            current.next = newNode;
         }
         size++;
         return true;
@@ -35,53 +40,90 @@ public class MyLinkedList<T> implements MyList<T> {
 
     @Override
     public boolean remove(Object o) {
-        if(head == null){
+        if (head == null) {
             return false;
         }
-        Node<T> node = head;
-        while(node.next != null){
-            if(node.next.data.equals(o)){
-                node.next = node.next.next;
+        if (o == null) {
+            if (head.data == null) {
+                head = head.next;
                 size--;
+                return true;
+            }
+            Node<T> current = head;
+            while (current.next != null) {
+                if (current.next.data == null) {
+                    current.next = current.next.next;
+                    size--;
+                    return true;
+                }
+                current = current.next;
+            }
+        } else {
+            // Handle non-null removal
+            if (o.equals(head.data)) {
+                head = head.next;
+                size--;
+                return true;
+            }
+            Node<T> current = head;
+            while (current.next != null) {
+                if (o.equals(current.next.data)) {
+                    current.next = current.next.next;
+                    size--;
+                    return true;
+                }
+                current = current.next;
             }
         }
-        return true;
+        return false;
     }
 
     @Override
     public T get(int index) {
-        Node<T> node = head;
-        for(int i = 0; i < index; i++){
-            node = node.next;
-
-            if(node.data.equals(head.data)){
-                return node.data;
-            }
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
         }
-        return null;
+
+        Node<T> current = head;
+        for (int i = 0; i < index; i++) {
+            current = current.next;
+        }
+        return current.data;
     }
 
     @Override
     public T set(int index, T element) {
-        Node<T> node = head;
-        for(int i = 0; i < index; i++){
-            node = node.next;
-            if(node.data.equals(element)){
-                node.next = node.next.next;
-            }
-            else{
-                node.next = node.next.next;
-            }
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
         }
-        return node.data;
+
+        Node<T> current = head;
+        for (int i = 0; i < index; i++) {
+            current = current.next;
+        }
+
+        T oldData = current.data;
+        current.data = element;
+        return oldData;
     }
 
     @Override
     public boolean contains(Object o) {
-        Node<T> node = head;
-        while(node.next != null){
-            if(node.next.data.equals(o)){
-                return true;
+        Node<T> current = head;
+
+        if (o == null) {
+            while (current != null) {
+                if (current.data == null) {
+                    return true;
+                }
+                current = current.next;
+            }
+        } else {
+            while (current != null) {
+                if (o.equals(current.data)) {
+                    return true;
+                }
+                current = current.next;
             }
         }
         return false;
@@ -94,24 +136,33 @@ public class MyLinkedList<T> implements MyList<T> {
 
     @Override
     public boolean isEmpty() {
-        if(head == null){
-            return true;
-        }
-        return false;
+        return size == 0;
     }
 
-
-    //NB! Korrekt implementation?
     @Override
     public MyList<T> subList(int fromIndex, int toIndex) {
-        MyList<T> sublist = new MyLinkedList<T>();
-        for(int i = fromIndex; i < toIndex; i++){
+
+        if (fromIndex < 0 || toIndex > size || fromIndex > toIndex) {
+            throw new IndexOutOfBoundsException("fromIndex: " + fromIndex + ", toIndex: " + toIndex + ", Size: " + size);
+        }
+
+        MyList<T> sublist = new MyLinkedList<>();
+        for (int i = fromIndex; i < toIndex; i++) {
             sublist.add(get(i));
         }
         return sublist;
     }
 
-
-
-
+    public void display() {
+        System.out.print("[");
+        Node<T> current = head;
+        while (current != null) {
+            System.out.print(current.data);
+            if (current.next != null) {
+                System.out.print(", ");
+            }
+            current = current.next;
+        }
+        System.out.println("]");
+    }
 }
